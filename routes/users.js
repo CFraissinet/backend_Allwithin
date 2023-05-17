@@ -31,6 +31,32 @@ router.post(
     { name: "avatar", maxCount: 1 },
   ]),
   (req, res) => {
+    if (!req.body.data) {
+      console.log(req.body);
+      const hash = bcrypt.hashSync(req.body.password, 10);
+
+      const newUser = new User({
+        firstname: req.body.firstname,
+        name: req.body.name,
+        password: hash,
+        token: uid2(32),
+        birthdate: req.body.birthdate,
+        email: req.body.email,
+        location: null,
+        role: null,
+        contact: null,
+        job: null,
+        experiences: null,
+        diploma: null,
+      });
+
+      newUser.save().then(() => {
+        res.json({ result: true });
+      });
+
+      return;
+    }
+
     // After, files has been retreived, reputs req.body.data in Json form so we can collect data
     req.body = JSON.parse(req.body.data);
 
@@ -49,11 +75,16 @@ router.post(
         const newUser = new User({
           firstname: req.body.firstname,
           name: req.body.name,
-          email: req.body.email,
           password: hash,
-          job: req.body.job,
           token: uid2(32),
-          experiences: req.body.experiences,
+          birthdate: req.body.birthdate,
+          email: req.body.email,
+          location: null,
+          role: null,
+          contact: null,
+          job: null,
+          experiences: null,
+          diploma: null,
         });
 
         newUser.save().then(() => {
