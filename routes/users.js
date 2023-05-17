@@ -85,6 +85,8 @@ router.post(
           job: null,
           experiences: null,
           diploma: null,
+          cv: null,
+          avatar: null,
         });
 
         newUser.save().then(() => {
