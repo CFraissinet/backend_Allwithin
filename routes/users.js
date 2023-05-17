@@ -4,29 +4,38 @@ const router = express.Router();
 require("../models/connection");
 const User = require("../models/users");
 const { checkBody } = require("../modules/checkBody");
+const multer = require("multer");
 const uid2 = require("uid2");
 const bcrypt = require("bcrypt");
 
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+// allows to add extension to files received
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
 
+// sends all files recieved in "uploads" folder
+const upload = multer({ storage: storage });
+
+// route to get all infos from front-end for signup
 router.post(
   "/signup",
+
+  // send to "uploads" folder
   upload.fields([
     { name: "cv", maxCount: 1 },
     { name: "avatar", maxCount: 1 },
   ]),
-  (req, res, next) => {
-    console.log(req.body.firstname);
-    if (
-      !checkBody(req.body, [
-        "firstname",
-        "name",
-        "email",
-        "password",
-        "confirmPassword",
-      ])
-    ) {
+  (req, res) => {
+    // After, files has been retreived, reputs req.body.data in Json form so we can collect data
+    req.body = JSON.parse(req.body.data);
+
+    // Checks if one of the fields is empty
+    if (!checkBody(req.body, ["firstname", "name", "email", "password"])) {
       res.json({ result: false, error: "Missing or empty fields" });
       return;
     }
@@ -36,19 +45,15 @@ router.post(
       if (data === null) {
         // Authentication with token and hash mechanics
         const hash = bcrypt.hashSync(req.body.password, 10);
-        const confirmHash = bcrypt.hashSync(req.body.confirmPassword, 10);
 
         const newUser = new User({
           firstname: req.body.firstname,
           name: req.body.name,
           email: req.body.email,
           password: hash,
-          confirmPassword: confirmHash,
-          token: uid2(32),
-          confirmationToken: uid2(32),
           job: req.body.job,
+          token: uid2(32),
           experiences: req.body.experiences,
-          photo: req.body.photo,
         });
 
         newUser.save().then(() => {
@@ -63,16 +68,16 @@ router.post(
 );
 
 router.post("/signin", (req, res) => {
+  // Checks if one of the fields is empty
   if (!checkBody(req.body, ["email", "password"])) {
     res.json({ result: false, error: "Missing or empty fields" });
     return;
   }
 
   User.findOne({ email: req.body.email }).then((data) => {
-    console.log(data);
     // Authentication with token and hash mechanics
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
-      res.json({ result: true, token: data.token });
+      res.json({ result: true });
     } else {
       res.json({ result: false, error: "User not found" });
     }

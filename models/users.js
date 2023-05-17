@@ -5,11 +5,11 @@ const userSchema = mongoose.Schema({
   name: String,
   email: String,
   password: String,
-  confirmPassword: String,
-  confirmationToken: String,
   job: String,
-  experiences: [String],
+  token: String,
+  experiences: String,
   photo: String,
+  cv: String,
 });
 
 const User = mongoose.model("users", userSchema);
