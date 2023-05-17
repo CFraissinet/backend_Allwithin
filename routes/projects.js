@@ -6,7 +6,7 @@ const Project = require("../models/projects");
 const User = require("../models/users");
 const { checkBody } = require("../modules/checkBody");
 
-router.post("/", (req, res) => {
+router.post("/addProject", (req, res) => {
   if (!checkBody(req.body, ["name", "description", "end_date"])) {
     res.json({ result: false, error: "Missing or empty fields" });
     return;
@@ -25,6 +25,12 @@ router.post("/", (req, res) => {
     newProject.save().then(() => {
       res.json({ result: true });
     });
+  });
+});
+
+router.get("/:userId", (req, res) => {
+  Project.findOne({ user: req.params.userId }).then((data) => {
+    res.json({ result: true, projects: data });
   });
 });
 
