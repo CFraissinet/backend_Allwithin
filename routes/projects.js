@@ -12,7 +12,7 @@ router.post("/addProject", (req, res) => {
     return;
   }
 
-  User.findOne({ token: req.body.token }).then((data) => {
+  User.findOne({ user: req.body.token }).then((data) => {
     const newProject = new Project({
       user: data._id,
       name: req.body.name,
@@ -28,9 +28,11 @@ router.post("/addProject", (req, res) => {
   });
 });
 
-router.get("/:userId", (req, res) => {
-  Project.findOne({ user: req.params.userId }).then((data) => {
-    res.json({ result: true, projects: data });
+router.get("/:token", (req, res) => {
+  User.findOne({ token: req.params.token }).then((dataUser) => {
+    Project.find({ user: dataUser._id }).then((data) => {
+      res.json({ result: true, projects: data });
+    });
   });
 });
 

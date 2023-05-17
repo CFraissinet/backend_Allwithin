@@ -108,7 +108,7 @@ router.post("/signin", (req, res) => {
   User.findOne({ email: req.body.email }).then((data) => {
     // Authentication with token and hash mechanics
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
-      res.json({ result: true });
+      res.json({ result: true, token: data.token });
     } else {
       res.json({ result: false, error: "User not found" });
     }
