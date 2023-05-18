@@ -121,13 +121,15 @@ router.post(
                   email: req.body.email,
                   password: hash,
                   job: req.body.job,
-                  token: uid2(32),
                   experiences: req.body.experiences,
-                  birthdate: req.body.birthdate,
+                  token: uid2(32),
+                  birthdate: null,
                   location: null,
                   role: null,
                   contact: null,
                   diploma: null,
+                  photo: avatarURL,
+                  cv: cvURL,
                 });
 
                 newUser.save().then(() => {
