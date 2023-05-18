@@ -123,6 +123,11 @@ router.post(
                   job: req.body.job,
                   token: uid2(32),
                   experiences: req.body.experiences,
+                  birthdate: req.body.birthdate,
+                  location: null,
+                  role: null,
+                  contact: null,
+                  diploma: null,
                 });
 
                 newUser.save().then(() => {
