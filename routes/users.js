@@ -56,98 +56,7 @@ const upload = multer({
   },
 });
 
-const cpUpload = upload.fields([
-  { name: "cv", maxCount: 1 },
-  { name: "avatar", maxCount: 1 },
-]);
-// route to get all infos from front-end for signup
-router.post(
-  "/signup",
-  // send to "uploads" folder
-  cpUpload,
-  (req, res) => {
-    if (req.fileValidationError) {
-      res.json({ error: req.fileValidationError });
-      return;
-    }
-
-    let avatarURL;
-    let avatarPath =
-      "./" +
-      req.files["avatar"][0].destination +
-      req.files["avatar"][0].filename;
-
-    let cvURL;
-    let cvPath =
-      "./" + req.files["cv"][0].destination + req.files["cv"][0].filename;
-
-    cloudinary.uploader
-      .upload(avatarPath)
-      .then((data) => {
-        fs.unlinkSync(avatarPath);
-        avatarURL = data.secure_url;
-      })
-      .then(() => {
-        cloudinary.uploader
-          .upload(cvPath)
-          .then((data) => {
-            fs.unlinkSync(cvPath);
-            cvURL = data.secure_url;
-            console.log(cvURL);
-          })
-
-          .then(() => {
-            // After, files has been retreived, reputs req.body.data in Json form so we can collect data
-            req.body = JSON.parse(req.body.data);
-          })
-          .then(() => {
-            // Checks if one of the fields is empty
-            if (
-              !checkBody(req.body, ["firstname", "name", "email", "password"])
-            ) {
-              res.json({ result: false, error: "Missing or empty fields" });
-              return;
-            }
-            // console.log(avatarURL);
-            // Check if the user has not already been registered
-            User.findOne({ email: req.body.email }).then((data) => {
-              if (data === null) {
-                // Authentication with token and hash mechanics
-                const hash = bcrypt.hashSync(req.body.password, 10);
-
-                const newUser = new User({
-                  firstname: req.body.firstname,
-                  name: req.body.name,
-                  email: req.body.email,
-                  password: hash,
-                  job: req.body.job,
-                  experiences: req.body.experiences,
-                  token: uid2(32),
-                  birthdate: null,
-                  location: null,
-                  role: null,
-                  contact: null,
-                  diploma: null,
-                  photo: avatarURL,
-                  cv: cvURL,
-                });
-
-                newUser.save().then(() => {
-                  res.json({ result: true, avatar: avatarURL, cv: cvURL });
-                });
-              } else {
-                // User already exists in database
-                res.json({
-                  result: false,
-                  error: "User already exists",
-                });
-              }
-            });
-          });
-      });
-  }
-);
-
+// SIGN IN ROUTE --------------------------
 router.post("/signin", (req, res) => {
   // Checks if one of the fields is empty
   if (!checkBody(req.body, ["email", "password"])) {
@@ -164,5 +73,127 @@ router.post("/signin", (req, res) => {
     }
   });
 });
+
+// SIGNUP IN ROUTE --------------------------
+router.post("/signup", (req, res) => {
+  // Checks if one of the fields is empty
+  if (!checkBody(req.body, ["firstname", "name", "email", "password"])) {
+    res.json({ result: false, error: "Missing or empty fields" });
+    return;
+  }
+
+  // Check if the user has not already been registered
+  User.findOne({ email: req.body.email }).then((data) => {
+    if (data === null) {
+      // Authentication with token and hash mechanics
+      const hash = bcrypt.hashSync(req.body.password, 10);
+
+      const newUser = new User({
+        firstname: req.body.firstname,
+        name: req.body.name,
+        email: req.body.email,
+        password: hash,
+        job: req.body.job,
+        experiences: req.body.experiences,
+        token: uid2(32),
+        birthdate: null,
+        location: null,
+        role: null,
+        contact: null,
+        diploma: null,
+        photo: null,
+        cv: null,
+      });
+
+      newUser.save().then((data) => {
+        res.json({ result: true, user: data });
+      });
+    } else {
+      // User already exists in database
+      res.json({
+        result: false,
+        error: "User already exists",
+      });
+    }
+  });
+});
+
+// UPDATECV ROUTE --------------------------
+const cpUploadCV = upload.fields([{ name: "cv", maxCount: 1 }]);
+router.post(
+  "/updateCV",
+  // send to "uploads" folder
+  cpUploadCV,
+  (req, res) => {
+    if (req.fileValidationError) {
+      res.json({ error: req.fileValidationError });
+      return;
+    }
+
+    let cvURL;
+    let cvPath =
+      "./" + req.files["cv"][0].destination + req.files["cv"][0].filename;
+
+    cloudinary.uploader
+      .upload(cvPath)
+      .then((data) => {
+        fs.unlinkSync(cvPath);
+        cvURL = data.secure_url;
+        res.json({ cv: cvURL });
+      })
+      .then(() => {
+        req.body = JSON.parse(req.body.data);
+      })
+      .then(() => {
+        console.log(req.body);
+
+        User.updateOne({ email: req.body.email }, { cv: cvURL }).then(
+          (data) => {
+            console.log(data);
+          }
+        );
+      });
+  }
+);
+
+// UPDATEAVATAR ROUTE --------------------------
+const cpUploadAvatar = upload.fields([{ name: "avatar", maxCount: 1 }]);
+router.post(
+  "/updateAvatar",
+  // send to "uploads" folder
+  cpUploadAvatar,
+  (req, res) => {
+    if (req.fileValidationError) {
+      res.json({ error: req.fileValidationError });
+      return;
+    }
+
+    let avatarURL;
+    let avatarPath =
+      "./" +
+      req.files["avatar"][0].destination +
+      req.files["avatar"][0].filename;
+
+    cloudinary.uploader
+      .upload(avatarPath)
+      .then((data) => {
+        fs.unlinkSync(avatarPath);
+        avatarURL = data.secure_url;
+        res.json({ avatar: avatarURL });
+      })
+      .then(() => {
+        req.body = JSON.parse(req.body.data);
+      })
+      .then(() => {
+        console.log(req.body);
+
+        User.updateOne({ email: req.body.email }, { photo: avatarURL }).then(
+          (data) => {
+            console.log(data);
+          }
+        );
+      });
+  }
+);
 
 module.exports = router;
