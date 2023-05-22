@@ -132,8 +132,13 @@ router.post(
                   cv: cvURL,
                 });
 
-                newUser.save().then(() => {
-                  res.json({ result: true, avatar: avatarURL, cv: cvURL });
+                newUser.save().then((newDoc) => {
+                  res.json({
+                    result: true,
+                    avatar: avatarURL,
+                    cv: cvURL,
+                    token: newDoc.token,
+                  });
                 });
               } else {
                 // User already exists in database
