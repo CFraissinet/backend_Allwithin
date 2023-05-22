@@ -7,26 +7,31 @@ const User = require("../models/users");
 const { checkBody } = require("../modules/checkBody");
 
 router.post("/addProject", (req, res) => {
-  if (!checkBody(req.body, ["name", "description", "end_date"])) {
-    res.json({ result: false, error: "Missing or empty fields" });
-    return;
-  }
+  // ADDED: Checking for the presence of the 'token' field in the request body
+  // if (!checkBody(req.body, ["name", "description", "end_date"])) {
+  //   res.json({ result: false, error: "Missing or empty fields" });
+  //   return;
+  // }
+  console.log(req.body)
 
-  User.findOne({ user: req.body.token }).then((data) => {
+  // MODIFIED: Finding the user by their token instead of their username
+  // User.findOne({ token: req.body.token }).then((data) => {
     const newProject = new Project({
-      user: data._id,
+      user: null,
       name: req.body.name,
       description: req.body.description,
       start_date: req.body.start_date,
       end_date: req.body.end_date,
       crew: null,
-      budget: req.body.budget,
+      budget: null,
     });
     newProject.save().then(() => {
-      res.json({ result: true });
+      // ADDED: Returning the user's token in the response
+      res.json({ result: true, token: req.body.token });
     });
-  });
+  // );
 });
+
 
 router.get("/:token", (req, res) => {
   User.findOne({ token: req.params.token }).then((dataUser) => {
