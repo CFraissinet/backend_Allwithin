@@ -207,3 +207,12 @@ router.get("/jobs", (req, res) => {
     res.json({ result: true, jobs: data });
   });
 });
+
+router.post("/jobs", (req, res) => {
+  Job.updateOne(
+    { _id: req.body.jobId },
+    { $push: { users: req.body.userId } }
+  ).then((data) => {
+    res.json({ result: true, data: data });
+  });
+});
