@@ -32,7 +32,7 @@ router.post("/addProject", (req, res) => {
   });
 });
 
-router.get("token/:token", (req, res) => {
+router.get("/token/:token", (req, res) => {
   User.findOne({ token: req.params.token }).then((dataUser) => {
     Project.find({ user: dataUser._id }).then((data) => {
       res.json({ result: true, projects: data });
