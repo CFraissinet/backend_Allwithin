@@ -22,18 +22,4 @@ router.get("/", (req, res) => {
   });
 });
 
-//router for add profession in BDD
-router.post("/addJob", (req, res) => {
-  User.findOne({ token: req.body.token }).then((data) => {
-    const newJob = new Job({
-      user: data._id,
-      title: req.body.title,
-    });
-    newJob.save().then(() => {
-      res.json({ result: true });
-    });
-    console.log(req.body);
-  });
-});
-
 module.exports = router;
