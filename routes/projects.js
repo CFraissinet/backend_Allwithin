@@ -17,7 +17,7 @@ router.post("/addProject", (req, res) => {
   // MODIFIED: Finding the user by their token instead of their username
   User.findOne({ token: req.body.token }).then((data) => {
     const newProject = new Project({
-      user: null,
+      user: data._id,
       name: req.body.name,
       description: req.body.description,
       start_date: req.body.start_date,
