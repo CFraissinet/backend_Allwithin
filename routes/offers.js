@@ -6,7 +6,7 @@ const Offer = require("../models/offers");
 const { checkBody } = require("../modules/checkBody");
 
 router.get("/:projectId", (req, res) => {
-  Offer.findById({ projectId: req.params.projectiD })
+  Offer.find({ project: req.params.projectId })
     // .populate("project")
     // .populate("user_Id")
     .then((projectData) => {
