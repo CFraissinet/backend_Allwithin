@@ -12,12 +12,12 @@ router.post("/addProject", (req, res) => {
   //   res.json({ result: false, error: "Missing or empty fields" });
   //   return;
   // }
-  console.log(req.body)
+  console.log(req.body);
 
   // MODIFIED: Finding the user by their token instead of their username
-  // User.findOne({ token: req.body.token }).then((data) => {
+  User.findOne({ token: req.body.token }).then((data) => {
     const newProject = new Project({
-      user: null,
+      user: data._id,
       name: req.body.name,
       description: req.body.description,
       start_date: req.body.start_date,
@@ -29,9 +29,8 @@ router.post("/addProject", (req, res) => {
       // ADDED: Returning the user's token in the response
       res.json({ result: true, token: req.body.token });
     });
-  // );
+  });
 });
-
 
 router.get("/:token", (req, res) => {
   User.findOne({ token: req.params.token }).then((dataUser) => {
