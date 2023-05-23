@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 require("../models/connection");
 const User = require("../models/users");
+const Job = require("../models/jobs");
 const { checkBody } = require("../modules/checkBody");
 const multer = require("multer");
 const uid2 = require("uid2");
@@ -197,3 +198,12 @@ router.post(
 );
 
 module.exports = router;
+
+// GET ROUTE FOR ALL JOBS IN DB --------------------------
+
+router.get("/jobs", (req, res) => {
+  // Check if the user has not already been registered
+  Job.find({}).then((data) => {
+    res.json({ result: true, jobs: data });
+  });
+});
