@@ -216,3 +216,9 @@ router.post("/jobs", (req, res) => {
     res.json({ result: true, data: data });
   });
 });
+
+router.get("/:token", (req, res) => {
+  User.findOne({ token: req.params.token }).then((data) => {
+    res.json({ result: true, user: data });
+  });
+});
