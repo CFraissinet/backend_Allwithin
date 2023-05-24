@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema({
   linkedin: String,
   github: String,
   job: { type: mongoose.Schema.Types.ObjectId, ref: "jobs" },
-  experiences: [{ type: mongoose.Schema.Types.ObjectId, ref: "experiences" }],
+  experiences: String,
   diploma: [{ type: mongoose.Schema.Types.ObjectId, ref: "contact" }],
   photo: String,
   cv: String,
