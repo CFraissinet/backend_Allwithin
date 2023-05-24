@@ -208,6 +208,7 @@ router.get("/jobs", (req, res) => {
   });
 });
 
+// router for add user to one job
 router.post("/jobs", (req, res) => {
   Job.updateOne(
     { _id: req.body.jobId },
@@ -217,6 +218,7 @@ router.post("/jobs", (req, res) => {
   });
 });
 
+// router for recover user information by token
 router.get("/:token", (req, res) => {
   User.findOne({ token: req.params.token }).then((data) => {
     res.json({ result: true, user: data });
