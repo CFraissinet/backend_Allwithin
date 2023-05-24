@@ -99,8 +99,9 @@ router.post("/signup", (req, res) => {
         token: uid2(32),
         birthdate: null,
         location: null,
+        links: { linkedin: null, github: null },
         role: null,
-        contact: null,
+        phone_number: null,
         diploma: null,
         photo: null,
         cv: null,
@@ -222,5 +223,21 @@ router.post("/jobs", (req, res) => {
 router.get("/:token", (req, res) => {
   User.findOne({ token: req.params.token }).then((data) => {
     res.json({ result: true, user: data });
+  });
+});
+
+router.put("/updateModale", (req, res) => {
+  User.updateOne(
+    { token: req.body.token },
+    {
+      email: req.body.email,
+      location: req.body.location,
+      phone_number: req.body.phoneNumber,
+      job: req.body.job,
+      links: { linkedin: req.body.linkedin, github: req.body.github },
+    }
+  ).then((data) => {
+    res.json({ result: true, user: data });
+    console.log(data);
   });
 });
