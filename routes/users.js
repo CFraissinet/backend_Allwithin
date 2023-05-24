@@ -218,9 +218,11 @@ router.post("/jobs", (req, res) => {
   });
 });
 
-// router for recover user information by token
-router.get("/:token", (req, res) => {
-  User.findOne({ token: req.params.token }).then((data) => {
-    res.json({ result: true, user: data });
+// GET SPECIFIC USER'S FULL DATA USING TOKEN
+
+router.get("/userData/:token", (req, res) => {
+  // Check if the user has not already been registered
+  User.find({ token: req.params.token }).then((data) => {
+    res.json({ result: true, userData: data[0] });
   });
 });
