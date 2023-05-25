@@ -48,4 +48,17 @@ router.put("/refuse", (req, res) => {
 //     });
 // });
 
+// ADD OFFERS FROM A CREATED PROJECT
+
+router.post("/newOffer", (req, res) => {
+  const newOffer = new Offer({
+    offers: req.body.offers,
+    name: req.body.project,
+  });
+
+  newOffer.save().then((data) => {
+    res.json({ result: true, offer: data });
+  });
+});
+
 module.exports = router;
