@@ -25,9 +25,9 @@ router.post("/addProject", (req, res) => {
       crew: null,
       budget: null,
     });
-    newProject.save().then(() => {
+    newProject.save().then((data) => {
       // ADDED: Returning the user's token in the response
-      res.json({ result: true, token: req.body.token });
+      res.json({ result: true, id: data._id });
     });
   });
 });
