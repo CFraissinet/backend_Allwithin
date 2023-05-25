@@ -7,6 +7,8 @@ const projectSchema = mongoose.Schema({
   start_date: String,
   end_date: String,
   budget: Number,
+  offers: [{ type: mongoose.Schema.Types.ObjectId, ref: "offers" }],
+  location: String,
 });
 
 const Project = mongoose.model("projects", projectSchema);
