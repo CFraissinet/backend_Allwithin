@@ -22,6 +22,7 @@ router.post("/addProject", (req, res) => {
       description: req.body.description,
       start_date: req.body.start_date,
       end_date: req.body.end_date,
+      location: req.body.location,
       crew: null,
       budget: null,
     });
