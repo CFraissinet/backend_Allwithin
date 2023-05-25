@@ -57,7 +57,7 @@ router.post("/newOffer", (req, res) => {
   });
 
   newOffer.save().then((data) => {
-    res.json({ result: true, user: data });
+    res.json({ result: true, offer: data });
   });
 });
 
