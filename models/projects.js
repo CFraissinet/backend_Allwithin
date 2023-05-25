@@ -4,9 +4,8 @@ const projectSchema = mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
   name: String,
   description: String,
-  start_date: Date,
-  end_date: Date,
-  crew: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
+  start_date: String,
+  end_date: String,
   budget: Number,
 });
 
