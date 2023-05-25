@@ -97,11 +97,11 @@ router.post("/signup", (req, res) => {
         job: req.body.job,
         experiences: req.body.experiences,
         token: uid2(32),
-        birthdate: null,
+        birthdate: req.body.birthdate,
         location: null,
-        links: { linkedin: null, github: null },
-        role: null,
-        phone_number: null,
+        phone_number: req.body.phone_number,
+        linkedin: req.body.linkedin,
+        github: req.body.github,
         diploma: null,
         photo: null,
         cv: null,
@@ -223,9 +223,11 @@ router.post("/jobs", (req, res) => {
 
 router.get("/userData/:token", (req, res) => {
   // Check if the user has not already been registered
-  User.find({ token: req.params.token }).then((data) => {
-    res.json({ result: true, userData: data[0] });
-  });
+  User.find({ token: req.params.token })
+    .populate("job")
+    .then((data) => {
+      res.json({ result: true, userData: data });
+    });
 });
 
 // router.put("/updateModale", (req, res) => {

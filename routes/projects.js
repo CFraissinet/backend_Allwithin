@@ -22,12 +22,13 @@ router.post("/addProject", (req, res) => {
       description: req.body.description,
       start_date: req.body.start_date,
       end_date: req.body.end_date,
+      location: req.body.location,
       crew: null,
       budget: null,
     });
-    newProject.save().then(() => {
+    newProject.save().then((data) => {
       // ADDED: Returning the user's token in the response
-      res.json({ result: true, token: req.body.token });
+      res.json({ result: true, id: data._id });
     });
   });
 });

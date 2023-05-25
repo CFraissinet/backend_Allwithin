@@ -5,7 +5,7 @@ const userSchema = mongoose.Schema({
   name: String,
   password: String,
   token: String,
-  birthdate: Date,
+  birthdate: String,
   email: String,
   location: { type: mongoose.Schema.Types.ObjectId, ref: "locations" },
   role: { type: mongoose.Schema.Types.ObjectId, ref: "roles" },
