@@ -228,18 +228,18 @@ router.get("/userData/:token", (req, res) => {
   });
 });
 
-router.put("/updateModale", (req, res) => {
-  User.updateOne(
-    { token: req.body.token },
-    {
-      email: req.body.email,
-      location: req.body.location,
-      phone_number: req.body.phoneNumber,
-      job: req.body.job,
-      links: { linkedin: req.body.linkedin, github: req.body.github },
-    }
-  ).then((data) => {
-    res.json({ result: true, user: data });
-    console.log(data);
-  });
-});
+// router.put("/updateModale", (req, res) => {
+//   User.updateOne(
+//     { token: req.body.token },
+//     {
+//       email: req.body.email,
+//       location: req.body.location,
+//       phone_number: req.body.phoneNumber,
+//       job: req.body.job,
+//       links: { linkedin: req.body.linkedin, github: req.body.github },
+//     }
+//   ).then((data) => {
+//     res.json({ result: true, user: data });
+//     console.log(data);
+//   });
+// });
