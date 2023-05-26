@@ -198,8 +198,6 @@ router.post(
   }
 );
 
-module.exports = router;
-
 // GET ROUTE FOR ALL JOBS IN DB --------------------------
 
 router.get("/jobs", (req, res) => {
@@ -224,7 +222,7 @@ router.post("/jobs", (req, res) => {
 router.get("/userData/:token", (req, res) => {
   // Check if the user has not already been registered
   User.find({ token: req.params.token })
-    .populate("job")
+    // .populate("job")
     .then((data) => {
       res.json({ result: true, userData: data });
     });
@@ -245,3 +243,5 @@ router.get("/userData/:token", (req, res) => {
 //     console.log(data);
 //   });
 // });
+
+module.exports = router;

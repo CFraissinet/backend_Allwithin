@@ -7,7 +7,7 @@ const Project = require("../models/projects");
 const User = require("../models/users");
 const { checkBody } = require("../modules/checkBody");
 
-router.get("/:projectId", (req, res) => {
+router.get("/project/:projectId", (req, res) => {
   Offer.find({ project: req.params.projectId })
     // .populate("project")
     // .populate("user_Id")
@@ -79,6 +79,15 @@ router.post("/newOffer", (req, res) => {
   newOffer.save().then((data) => {
     res.json({ result: true, offer: data });
   });
+});
+
+// GET ALL OFFERS
+router.get("/allOffers", (req, res) => {
+  Offer.find()
+    .populate("project")
+    .then((data) => {
+      res.json({ result: true, allOffers: data });
+    });
 });
 
 module.exports = router;
