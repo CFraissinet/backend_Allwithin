@@ -16,25 +16,43 @@ router.get("/:projectId", (req, res) => {
     });
 });
 
-// router.put("/refuse", (req, res) => {
-//   Offer.findOne({ project: req.body.project }).then((data) => {
-//     const newIds = data.user_Id.filter(
-//       (user_Id) => user_Id.toString() !== req.body.user_Id
-//     );
-//     console.log(newIds);
-//     Offer.updateOne({ _id: data._id }, { user_Id: newIds });
-//     console.log(data.user_Id);
-//   });
-// });
-
 router.put("/refuse", (req, res) => {
-  Offer.findById(req.body._id).then((data) => {
+  Offer.findById(req.body.id).then((data) => {
     const newIds = data.user_Id.filter(
       (user_Id) => user_Id.toString() !== req.body.user_Id
     );
-    console.log(data.user_Id);
-    Offer.updateOne({ _id: data._id }, { user_Id: newIds }).then((data) => {
-      res.json({ result: data.user_id });
+    Offer.updateOne({ user_Id: data.user_Id }, { user_Id: newIds }).then(
+      (data) => {
+        res.json({ result: data.user_id });
+      }
+    );
+  });
+});
+
+router.put("/accept", (req, res) => {
+  removeId = req.body.user_Id;
+  console.log(removeId);
+  Offer.findById(req.body.id).then((data) => {
+    const newIds = data.user_Id.filter(
+      (user_Id) => user_Id.toString() !== removeId
+    );
+    console.log(newIds);
+    Offer.updateOne({ user_Id: data.user_Id }, { user_Id: newIds }).then(() => {
+      Project.findById(req.body.projectId).then((project) => {
+        console.log(project);
+
+        if (!project.crew) {
+          project.crew = [removeId];
+        } else if (project.crew.includes(removeId)) {
+          res.json({ result: false, error: "User already in the project" });
+        } else {
+          project.crew = [...project.crew, removeId];
+        }
+
+        project.save().then(() => {
+          res.json({ result: true, project: project });
+        });
+      });
     });
   });
 });
