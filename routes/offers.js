@@ -91,23 +91,26 @@ router.get("/allOffers", (req, res) => {
 });
 
 router.post("/addUserIdOnOffer", (req, res) => {
-  User.findOne({ token: req.body.token }).then((data) => {
-    if (data) {
-      res.json({
-        result: false,
-        msg: "You have already applied to this offer",
-      });
-    } else {
-      Offer.updateOne(
-        { "offers.job.value": req.body.offerId },
-        { $push: { users: data._id } }
-      ).then(() => {
+  User.findOne({ token: req.body.token }).then((userData) => {
+    Offer.findOne({ "offers.job.value": req.body.offerId }).then((data) => {
+      console.log("offer id : ");
+      if (data.users.some((e) => e.toString() == userData._id)) {
         res.json({
-          result: true,
-          msg: "You have applied to this offer",
+          result: false,
+          msg: "You have already applied to this offer",
         });
-      });
-    }
+      } else {
+        Offer.updateOne(
+          { "offers.job.value": req.body.offerId },
+          { $push: { users: userData._id } }
+        ).then(() => {
+          res.json({
+            result: true,
+            msg: "You have applied to this offer",
+          });
+        });
+      }
+    });
   });
 });
 
