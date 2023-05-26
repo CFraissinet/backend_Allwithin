@@ -10,8 +10,9 @@ const { checkBody } = require("../modules/checkBody");
 router.get("/:projectId", (req, res) => {
   Offer.find({ project: req.params.projectId })
     // .populate("project")
-    .populate("user_Id")
+    // .populate("user_Id")
     .then((projectData) => {
+      console.log(projectData);
       res.json({ projectData: projectData });
     });
 });
@@ -69,9 +70,10 @@ router.put("/accept", (req, res) => {
 // ADD OFFERS FROM A CREATED PROJECT
 
 router.post("/newOffer", (req, res) => {
+  console.log(req.body);
   const newOffer = new Offer({
     offers: req.body.offers,
-    name: req.body.project,
+    project: req.body.project,
   });
 
   newOffer.save().then((data) => {
