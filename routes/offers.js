@@ -10,7 +10,16 @@ const { checkBody } = require("../modules/checkBody");
 router.get("/project/:projectId", (req, res) => {
   Offer.find({ project: req.params.projectId })
     // .populate("project")
-    // .populate("user_Id")
+    .populate("users")
+    .then((projectData) => {
+      res.json({ projectData: projectData });
+    });
+});
+
+router.get("/:offerId", (req, res) => {
+  Offer.find({ _id : req.params.offerId })
+    // .populate("project")
+    .populate("users")
     .then((projectData) => {
       console.log(projectData);
       res.json({ projectData: projectData });
