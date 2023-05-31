@@ -19,8 +19,8 @@ router.post("/addProject", (req, res) => {
       user: data._id,
       name: req.body.name,
       description: req.body.description,
-      start_date: req.body.start_date,
-      end_date: req.body.end_date,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
       location: req.body.location,
       budget: null,
     });

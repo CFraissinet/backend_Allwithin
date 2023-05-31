@@ -85,6 +85,8 @@ router.post("/newOffer", (req, res) => {
 router.get("/allOffers", (req, res) => {
   Offer.find()
     .populate("project")
+    .populate({ path: "project", populate: { path: "location" } })
+
     .then((data) => {
       res.json({ result: true, allOffers: data });
     });
