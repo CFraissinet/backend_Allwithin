@@ -46,4 +46,23 @@ router.get("/showProjects", (req, res) => {
   });
 });
 
+router.put("/addCrew", (req, res) => {
+  removeId = req.body.users
+Project.findById(req.body.projectId).then((project) => {
+  console.log(project);
+
+  if (!project.crew) {
+    project.crew = [removeId];
+    res.json ({ result: true, message: "people add to project"})
+  } else if (project.crew.includes(removeId)) {
+    res.json({ result: false, error: "User already in the project" });
+  } else {
+    project.crew = [...project.crew, removeId];
+  }
+  project.save().then(() => {
+    res.json({ result: true, project: project });
+  });
+});
+});
+
 module.exports = router;

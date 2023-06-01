@@ -17,47 +17,45 @@ router.get("/project/:projectId", (req, res) => {
     });
 });
 
-router.put("/refuse", (req, res) => {
+router.put("/confirm", (req, res) => {
   Offer.findById(req.body.id).then((data) => {
-    const newIds = data.user_Id.filter(
-      (user_Id) => user_Id.toString() !== req.body.user_Id
-    );
-    Offer.updateOne({ user_Id: data.user_Id }, { user_Id: newIds }).then(
+    const newIds = data.users.filter(
+      (users) => users.toString() !== req.body.users);
+      console.log(newIds)
+    Offer.updateOne({ users: data.users }, { users: newIds }).then(
       (data) => {
-        res.json({ result: data.user_id });
+        if (data.modifiedCount > 0) {
+          Offer.findById(req.body.id)
+          .populate("users")
+          .then((data) => 
+          res.json({ result : true, users: data.users }))
+        } else {
+          res.json ({ result : false, message: "Nothing was edit"})
+        }
       }
     );
   });
 });
 
-router.put("/accept", (req, res) => {
-  removeId = req.body.user_Id;
-  console.log(removeId);
-  Offer.findById(req.body.id).then((data) => {
-    const newIds = data.user_Id.filter(
-      (user_Id) => user_Id.toString() !== removeId
-    );
-    console.log(newIds);
-    Offer.updateOne({ user_Id: data.user_Id }, { user_Id: newIds }).then(() => {
-      Project.findById(req.body.projectId).then((project) => {
-        console.log(project);
-
-        if (!project.crew) {
-          project.crew = [removeId];
-        } else if (project.crew.includes(removeId)) {
-          res.json({ result: false, error: "User already in the project" });
-        } else {
-          project.crew = [...project.crew, removeId];
-        }
-
-        project.save().then(() => {
-          res.json({ result: true, project: project });
-        });
-      });
-    });
-  });
-});
-
+// router.put("/accept", (req, res) => {
+//   removeId = req.body.users;
+//   console.log(removeId);
+//   Offer.findById(req.body.id).then((data) => {
+//     const newIds = data.users.filter(
+//       (users) => users.toString() !== removeId
+//     );
+//     console.log(newIds);
+//     Offer.updateOne({ users: data.users }, { users: newIds }).then(
+//       (data) => {
+//         if (data.modifiedCount > 0) {
+//           Offer.findById(req.body.id)
+//           .populate("users")
+//           .then((data) => 
+//           res.json({ result : true, users: data.users }))
+//         } else {
+//           res.json ({ result : false, message: "Nothing was edit"}));
+//   });
+  
 // router.post("", (req, res) => {
 //   Offer.find({ project: req.params.projectId })
 //     // .populate("project")

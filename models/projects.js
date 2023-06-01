@@ -7,8 +7,8 @@ const projectSchema = mongoose.Schema({
   startDate: String,
   endDate: String,
   budget: Number,
-  offers: [{ type: mongoose.Schema.Types.ObjectId, ref: "offers" }],
   location: { type: mongoose.Schema.Types.ObjectId, ref: "locations" },
+  crew: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
 });
 
 const Project = mongoose.model("projects", projectSchema);
