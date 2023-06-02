@@ -22,4 +22,11 @@ router.get("/", (req, res) => {
   });
 });
 
+router.get("/job/:id", (req, res) => {
+  Job.findById(req.params.id).then((data) => {
+    req.json({ result: true, job: data.name });
+  });
+});
+
 module.exports = router;
+//com
