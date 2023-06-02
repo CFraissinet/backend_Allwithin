@@ -74,4 +74,14 @@ router.put("/addCrew", (req, res) => {
   });
 });
 
+router.get("/crewProject/:projectId", (req, res) => {
+  Project.findOne({ projectId : req.params.id })
+  .populate('crew')
+  .populate({ path: "crew", populate: { path: "job" } })
+  .populate('user')
+  .then((data) => {
+    res.json({ result: true, crew: data.crew, user: data.user, job: data.job});
+    });
+  });
+
 module.exports = router;
