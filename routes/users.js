@@ -221,27 +221,9 @@ router.post("/jobs", (req, res) => {
 
 router.get("/userData/:token", (req, res) => {
   // Check if the user has not already been registered
-  User.find({ token: req.params.token })
-    // .populate("job")
-    .then((data) => {
-      res.json({ result: true, userData: data });
-    });
+  User.find({ token: req.params.token }).then((data) => {
+    res.json({ result: true, userData: data });
+  });
 });
-
-// router.put("/updateModale", (req, res) => {
-//   User.updateOne(
-//     { token: req.body.token },
-//     {
-//       email: req.body.email,
-//       location: req.body.location,
-//       phone_number: req.body.phoneNumber,
-//       job: req.body.job,
-//       links: { linkedin: req.body.linkedin, github: req.body.github },
-//     }
-//   ).then((data) => {
-//     res.json({ result: true, user: data });
-//     console.log(data);
-//   });
-// });
 
 module.exports = router;
