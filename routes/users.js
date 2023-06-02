@@ -187,7 +187,7 @@ router.post(
         req.body = JSON.parse(req.body.data);
       })
       .then(() => {
-        console.log(req.body);
+        console.log("jojo", req.body);
 
         User.updateOne({ email: req.body.email }, { photo: avatarURL }).then(
           (data) => {
