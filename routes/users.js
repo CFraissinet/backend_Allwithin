@@ -221,9 +221,11 @@ router.post("/jobs", (req, res) => {
 
 router.get("/userData/:token", (req, res) => {
   // Check if the user has not already been registered
-  User.find({ token: req.params.token }).then((data) => {
-    res.json({ result: true, userData: data });
-  });
+  User.findOne({ token: req.params.token })
+    .populate("job")
+    .then((data) => {
+      res.json({ result: true, userData: data });
+    });
 });
 
 module.exports = router;
