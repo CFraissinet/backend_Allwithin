@@ -147,11 +147,8 @@ router.post(
         req.body = JSON.parse(req.body.data);
       })
       .then(() => {
-        console.log(req.body);
-
         User.updateOne({ email: req.body.email }, { cv: cvURL }).then(
           (data) => {
-            console.log(data);
           }
         );
       });
@@ -187,11 +184,9 @@ router.post(
         req.body = JSON.parse(req.body.data);
       })
       .then(() => {
-        console.log("jojo", req.body);
 
         User.updateOne({ email: req.body.email }, { photo: avatarURL }).then(
           (data) => {
-            console.log(data);
           }
         );
       });

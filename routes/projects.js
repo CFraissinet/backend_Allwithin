@@ -7,11 +7,6 @@ const User = require("../models/users");
 const { checkBody } = require("../modules/checkBody");
 
 router.post("/addProject", (req, res) => {
-  // ADDED: Checking for the presence of the 'token' field in the request body
-  // if (!checkBody(req.body, ["name", "description", "end_date"])) {
-  //   res.json({ result: false, error: "Missing or empty fields" });
-  //   return;
-  // }
 
   // MODIFIED: Finding the user by their token instead of their username
   User.findOne({ token: req.body.token }).then((data) => {
@@ -26,7 +21,6 @@ router.post("/addProject", (req, res) => {
     });
     newProject.save().then((data) => {
       // ADDED: Returning the user's token in the response
-      console.log(data);
       res.json({ result: true, data });
     });
   });
@@ -58,7 +52,6 @@ router.get("/freelanceProjects/:userId", (req, res) => {
 router.put("/addCrew", (req, res) => {
   removeId = req.body.users;
   Project.findById(req.body.projectId).then((project) => {
-    console.log(project);
 
     if (!project.crew) {
       project.crew = [removeId];
